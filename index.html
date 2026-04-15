@@ -1,0 +1,450 @@
+import React, { useState } from 'react';
+import { 
+  BarChart3, 
+  MessageSquare, 
+  Star, 
+  Share2, 
+  Search, 
+  Users, 
+  PhoneCall, 
+  Clock, 
+  CheckCircle,
+  TrendingUp,
+  MapPin,
+  Calendar,
+  Settings,
+  Bell,
+  Menu,
+  X
+} from 'lucide-react';
+
+// --- MOCK DATA BASED ON DOCUMENT ---
+
+const journeyStages = [
+  { name: 'Awareness', desc: 'Targeted digital strategies to get noticed.', icon: Share2, metric: '+45% Traffic' },
+  { name: 'Findability', desc: 'SEO and local listing management.', icon: Search, metric: '98% Sync' },
+  { name: 'Reputation', desc: 'Building trust through social proof.', icon: Star, metric: '4.8 Avg Rating' },
+  { name: 'Conversion', desc: 'Turning prospects into paying customers.', icon: TrendingUp, metric: '372% Conversion' },
+  { name: 'Advocacy', desc: 'Driving referrals and repeat business.', icon: Users, metric: '+22% Retention' },
+];
+
+const automationTemplates = [
+  { title: 'Attract', scenario: 'AI-generated follow-up for web chat leads after hours.', action: 'Responded in < 1m' },
+  { title: 'Convert & Engage', scenario: 'Sends confirmation SMS, logs in CRM, creates tasks.', action: '95% Confirmation' },
+  { title: 'Retain', scenario: 'Adds new contacts to wellness marketing campaigns.', action: '150 Enrolled' },
+  { title: 'Nurture', scenario: '3-day check-in message for pending quotes/bookings.', action: '45% Reactivated' },
+  { title: 'Reputation', scenario: 'Automatically request reviews after marked complete.', action: '12 New Reviews' },
+];
+
+const recentReviews = [
+  { author: 'Sarah J.', rating: 5, platform: 'Google', text: 'Amazing facial! The booking process was so easy even late at night.', sentiment: 'Positive' },
+  { author: 'Michael T.', rating: 4, platform: 'Yelp', text: 'Great massage, will definitely be coming back. Received a nice text reminder.', sentiment: 'Positive' },
+  { author: 'Emma W.', rating: 5, platform: 'Facebook', text: 'They answered my questions instantly on Facebook messenger!', sentiment: 'Positive' },
+];
+
+const socialPosts = [
+  { platform: 'Instagram', type: 'Transformation Photo', status: 'Scheduled', time: 'Tomorrow, 10:00 AM' },
+  { platform: 'Facebook', type: 'Promo: We Miss You', status: 'Published', time: 'Today, 9:00 AM' },
+  { platform: 'TikTok', type: 'Self-care tips', status: 'Draft', time: 'Friday, 3:00 PM' },
+];
+
+// --- COMPONENTS ---
+
+const Card = ({ children, className = '' }) => (
+  <div className={`bg-white rounded-xl shadow-sm border border-gray-100 p-6 ${className}`}>
+    {children}
+  </div>
+);
+
+const StatBadge = ({ title, value, icon: Icon, trend }) => (
+  <Card className="flex items-center space-x-4 border-l-4" style={{ borderLeftColor: '#a98a66' }}>
+    <div className="p-3 rounded-full" style={{ backgroundColor: 'rgba(169, 138, 102, 0.1)', color: '#a98a66' }}>
+      <Icon size={24} />
+    </div>
+    <div>
+      <p className="text-sm text-gray-500 font-medium">{title}</p>
+      <div className="flex items-baseline space-x-2">
+        <h3 className="text-2xl font-bold text-black">{value}</h3>
+        {trend && <span className="text-sm font-semibold text-green-600">{trend}</span>}
+      </div>
+    </div>
+  </Card>
+);
+
+// --- VIEWS ---
+
+const OverviewView = () => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <StatBadge title="Total AI Bookings" value="1,284" icon={Calendar} trend="+12%" />
+      <StatBadge title="Missed Calls Recovered" value="342" icon={PhoneCall} trend="+372% Conv." />
+      <StatBadge title="Avg Review Rating" value="4.8" icon={Star} trend="+0.2" />
+      <StatBadge title="Active Campaigns" value="8" icon={Share2} />
+    </div>
+
+    <Card>
+      <h2 className="text-xl font-bold text-black mb-6">The Customer Journey Pipeline</h2>
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        {journeyStages.map((stage, idx) => (
+          <div key={idx} className="relative group">
+            <div className="h-full p-4 border rounded-lg hover:shadow-md transition-all duration-300" style={{ borderColor: idx === 0 ? '#a98a66' : '#e5e7eb' }}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="p-2 rounded-full bg-black text-white">
+                  <stage.icon size={18} />
+                </div>
+                <span className="text-xs font-bold px-2 py-1 rounded-full" style={{ backgroundColor: 'rgba(169, 138, 102, 0.1)', color: '#a98a66' }}>
+                  {stage.metric}
+                </span>
+              </div>
+              <h3 className="font-bold text-black mb-1">{stage.name}</h3>
+              <p className="text-xs text-gray-500">{stage.desc}</p>
+            </div>
+            {idx < journeyStages.length - 1 && (
+              <div className="hidden md:block absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 text-gray-300">
+                <TrendingUp size={20} />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </Card>
+
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <Card>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-bold text-black">AI Automation Templates</h2>
+          <button className="text-sm font-semibold hover:underline" style={{ color: '#a98a66' }}>View All</button>
+        </div>
+        <div className="space-y-4">
+          {automationTemplates.slice(0, 3).map((template, idx) => (
+            <div key={idx} className="flex items-start justify-between p-3 border border-gray-100 rounded-lg bg-gray-50">
+              <div>
+                <h4 className="font-bold text-black text-sm">{template.title}</h4>
+                <p className="text-xs text-gray-500 mt-1">{template.scenario}</p>
+              </div>
+              <span className="text-xs font-bold px-2 py-1 rounded bg-white border border-gray-200 text-gray-700 whitespace-nowrap ml-4">
+                {template.action}
+              </span>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <Card className="bg-black text-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-8 opacity-10">
+          <MessageSquare size={120} />
+        </div>
+        <h2 className="text-2xl font-bold mb-2" style={{ color: '#a98a66' }}>Conversations AI Premium</h2>
+        <p className="text-gray-300 mb-6 max-w-sm">
+          Your 24/7 AI Receptionist is currently active. Capturing leads, booking appointments, and recovering missed revenue automatically.
+        </p>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 rounded-lg bg-gray-900 border border-gray-800">
+            <p className="text-xs text-gray-400 mb-1">After-hours Inquiries Handled</p>
+            <p className="text-2xl font-bold">156</p>
+          </div>
+          <div className="p-4 rounded-lg bg-gray-900 border border-gray-800">
+            <p className="text-xs text-gray-400 mb-1">Lead-to-Revenue Conv.</p>
+            <p className="text-2xl font-bold" style={{ color: '#a98a66' }}>372%</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  </div>
+);
+
+const ConversationsView = () => (
+  <div className="space-y-6">
+    <div className="flex justify-between items-center mb-6">
+      <div>
+        <h1 className="text-2xl font-bold text-black">Unified Inbox & AI Workforce</h1>
+        <p className="text-gray-500">Manage phone, SMS, Web Chat, Facebook, and Instagram.</p>
+      </div>
+      <button className="px-4 py-2 text-white rounded-md font-medium transition-colors" style={{ backgroundColor: '#a98a66' }}>
+        Configure AI Prompt
+      </button>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="md:col-span-1 border rounded-xl bg-white shadow-sm overflow-hidden flex flex-col h-[600px]">
+        <div className="p-4 border-b border-gray-100 bg-gray-50">
+          <input type="text" placeholder="Search conversations..." className="w-full px-3 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:border-[#a98a66]" />
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {[
+            { name: 'Jessica R.', channel: 'Instagram DM', time: '2m ago', preview: 'Is there any availability tomorrow?', status: 'AI Responding' },
+            { name: 'Mark D.', channel: 'Missed Call', time: '15m ago', preview: 'AI sent recovery text: "Sorry we missed you..."', status: 'Booked' },
+            { name: 'Sarah J.', channel: 'Web Chat', time: '1h ago', preview: 'Thanks, I will take the 3PM slot.', status: 'Closed' },
+            { name: 'Alex W.', channel: 'WhatsApp', time: '2h ago', preview: 'How much is the wedding package?', status: 'Awaiting User' },
+          ].map((chat, idx) => (
+            <div key={idx} className={`p-4 border-b border-gray-50 cursor-pointer hover:bg-gray-50 ${idx === 0 ? 'bg-[rgba(169,138,102,0.05)] border-l-4 border-l-[#a98a66]' : ''}`}>
+              <div className="flex justify-between items-start mb-1">
+                <span className="font-bold text-black text-sm">{chat.name}</span>
+                <span className="text-xs text-gray-400">{chat.time}</span>
+              </div>
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-xs text-gray-500 truncate max-w-[150px]">{chat.preview}</span>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${chat.status === 'Booked' ? 'bg-green-100 text-green-700' : chat.status === 'AI Responding' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+                  {chat.status}
+                </span>
+              </div>
+              <div className="text-[10px] font-medium mt-2 uppercase tracking-wider text-gray-400">{chat.channel}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="md:col-span-2 flex flex-col h-[600px]">
+        <Card className="flex-1 flex flex-col h-full">
+          <div className="border-b border-gray-100 pb-4 mb-4 flex justify-between items-center">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold">JR</div>
+              <div>
+                <h3 className="font-bold text-black">Jessica R.</h3>
+                <p className="text-xs text-gray-500">Instagram Direct Message • Lead</p>
+              </div>
+            </div>
+            <div className="flex space-x-2">
+              <button className="px-3 py-1.5 text-xs font-semibold rounded border border-gray-200 hover:bg-gray-50">Assign to Human</button>
+              <button className="px-3 py-1.5 text-xs font-semibold rounded text-white" style={{ backgroundColor: '#a98a66' }}>Book Appointment</button>
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto space-y-4 p-4 bg-gray-50 rounded-lg mb-4">
+            <div className="flex flex-col space-y-2 max-w-[80%]">
+              <div className="bg-white p-3 rounded-lg rounded-tl-none border border-gray-100 text-sm text-gray-800 shadow-sm">
+                Hi! Do you have any availability for a facial tomorrow afternoon?
+              </div>
+              <span className="text-xs text-gray-400 ml-1">Jessica R. • 2:45 PM</span>
+            </div>
+            
+            <div className="flex flex-col space-y-2 max-w-[80%] self-end ml-auto items-end">
+              <div className="p-3 rounded-lg rounded-tr-none text-sm text-white shadow-sm" style={{ backgroundColor: '#a98a66' }}>
+                <div className="flex items-center space-x-2 mb-1 opacity-80">
+                  <span className="text-[10px] font-bold uppercase tracking-wider">AI Assistant</span>
+                </div>
+                Hi Jessica! We'd love to help you feel your best. We have openings tomorrow at 2:00 PM and 4:15 PM for our Signature Facial. Would you like me to reserve one of those spots for you?
+              </div>
+              <span className="text-xs text-gray-400 mr-1">Sent automatically • 2:45 PM</span>
+            </div>
+          </div>
+          
+          <div className="mt-auto border-t border-gray-100 pt-4">
+            <div className="flex space-x-2">
+              <input type="text" placeholder="Type a message or let AI handle it..." className="flex-1 px-4 py-2 rounded-md border border-gray-200 text-sm focus:outline-none focus:border-[#a98a66]" />
+              <button className="px-4 py-2 rounded-md text-white font-medium flex items-center justify-center transition-colors" style={{ backgroundColor: 'black' }}>
+                Send
+              </button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </div>
+);
+
+const ReputationView = () => (
+  <div className="space-y-6">
+     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-black text-white">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-gray-400 text-sm mb-1">Average Rating</p>
+              <h2 className="text-4xl font-bold" style={{ color: '#a98a66' }}>4.8</h2>
+              <div className="flex text-[#a98a66] mt-2">
+                {[1,2,3,4,5].map(i => <Star key={i} size={16} fill={i <= 4 ? "#a98a66" : "transparent"} />)}
+              </div>
+            </div>
+            <div className="p-3 rounded-full bg-gray-900">
+              <Star size={24} color="#a98a66" />
+            </div>
+          </div>
+        </Card>
+        <StatBadge title="Total Reviews" value="842" icon={MessageSquare} trend="+12 this week" />
+        <StatBadge title="Automated Review Requests" value="1,204" icon={CheckCircle} trend="65% Open Rate" />
+    </div>
+
+    <Card>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-black">AI Review Management</h2>
+        <div className="flex space-x-2">
+          <span className="px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs font-bold flex items-center">
+            <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+            Auto-Response Active
+          </span>
+        </div>
+      </div>
+      
+      <div className="space-y-4">
+        {recentReviews.map((review, idx) => (
+          <div key={idx} className="p-4 border border-gray-100 rounded-lg flex flex-col md:flex-row gap-4 justify-between bg-gray-50">
+            <div className="flex-1">
+              <div className="flex items-center space-x-2 mb-2">
+                <span className="font-bold text-black">{review.author}</span>
+                <span className="text-xs px-2 py-0.5 rounded bg-white border border-gray-200">{review.platform}</span>
+                <span className="text-xs px-2 py-0.5 rounded bg-green-100 text-green-700">{review.sentiment}</span>
+              </div>
+              <div className="flex text-[#a98a66] mb-2">
+                {[1,2,3,4,5].map(i => <Star key={i} size={12} fill={i <= review.rating ? "#a98a66" : "transparent"} />)}
+              </div>
+              <p className="text-sm text-gray-700">{review.text}</p>
+            </div>
+            <div className="w-full md:w-1/3 bg-white p-3 rounded border border-gray-100">
+              <p className="text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">AI Generated Response</p>
+              <p className="text-xs text-gray-600 mb-3 italic">"Thank you so much, {review.author.split(' ')[0]}! We're thrilled you had a great experience with our booking process and service. Looking forward to seeing you again soon!"</p>
+              <div className="flex space-x-2">
+                <button className="flex-1 py-1.5 bg-[#a98a66] text-white text-xs font-bold rounded">Approve & Publish</button>
+                <button className="flex-1 py-1.5 border border-gray-200 text-black text-xs font-bold rounded hover:bg-gray-50">Edit</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  </div>
+);
+
+// --- MAIN LAYOUT APP ---
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: BarChart3 },
+    { id: 'conversations', label: 'Conversations AI', icon: MessageSquare },
+    { id: 'reputation', label: 'Reputation AI', icon: Star },
+    { id: 'social', label: 'Social Marketing', icon: Share2 },
+    { id: 'seo', label: 'Local SEO Pro', icon: Search },
+    { id: 'crm', label: 'Campaign & CRM', icon: Users },
+  ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'overview': return <OverviewView />;
+      case 'conversations': return <ConversationsView />;
+      case 'reputation': return <ReputationView />;
+      case 'social': 
+        return (
+          <Card className="flex flex-col items-center justify-center py-20 text-center">
+            <Share2 size={64} className="text-gray-300 mb-4" />
+            <h2 className="text-2xl font-bold text-black mb-2">AI Content Creator Active</h2>
+            <p className="text-gray-500 max-w-md mb-6">Your AI is automatically generating and scheduling branded content across Instagram, Facebook, and TikTok to keep your feeds active.</p>
+            <button className="px-6 py-2 text-white font-bold rounded" style={{ backgroundColor: '#a98a66' }}>View Content Calendar</button>
+          </Card>
+        );
+      case 'seo':
+        return (
+          <Card className="flex flex-col items-center justify-center py-20 text-center">
+             <MapPin size={64} className="text-gray-300 mb-4" />
+            <h2 className="text-2xl font-bold text-black mb-2">Listing Sync Pro</h2>
+            <p className="text-gray-500 max-w-md mb-6">Your business information is synced and locked across 50+ high-authority directories, boosting your local search ranking.</p>
+            <div className="w-full max-w-md bg-gray-100 rounded-full h-4 mb-2 overflow-hidden">
+              <div className="h-4 rounded-full" style={{ width: '98%', backgroundColor: '#a98a66' }}></div>
+            </div>
+            <p className="text-sm font-bold text-gray-600 mb-6">98% Listing Accuracy Score</p>
+            <button className="px-6 py-2 border border-black text-black font-bold rounded hover:bg-gray-50">View SEO Grid</button>
+          </Card>
+        );
+      case 'crm':
+        return (
+          <Card className="flex flex-col items-center justify-center py-20 text-center">
+             <Users size={64} className="text-gray-300 mb-4" />
+            <h2 className="text-2xl font-bold text-black mb-2">AI-Powered CRM</h2>
+            <p className="text-gray-500 max-w-md mb-6">Automatically extracting meeting outcomes, tagging leads, and triggering personalized email & SMS campaigns.</p>
+            <button className="px-6 py-2 text-white font-bold rounded" style={{ backgroundColor: 'black' }}>View Sales Pipeline</button>
+          </Card>
+        );
+      default: return <OverviewView />;
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-100 font-sans">
+      
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <div className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 w-64 bg-black text-white transition-transform duration-200 ease-in-out z-50 flex flex-col`}>
+        <div className="p-6 border-b border-gray-800">
+          <h1 className="text-xl font-bold uppercase tracking-widest leading-tight" style={{ color: '#a98a66' }}>
+            The Gentleman
+            <span className="block text-white text-xs tracking-normal mt-1">OF MARKETING</span>
+          </h1>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto py-6">
+          <p className="px-6 text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">AI Workspace</p>
+          <nav className="space-y-1">
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => { setActiveTab(tab.id); setIsMobileMenuOpen(false); }}
+                  className={`w-full flex items-center px-6 py-3 text-sm font-medium transition-colors border-l-4 ${
+                    isActive 
+                      ? 'bg-gray-900 border-[#a98a66] text-[#a98a66]' 
+                      : 'border-transparent text-gray-400 hover:bg-gray-900 hover:text-white'
+                  }`}
+                >
+                  <tab.icon size={18} className={`mr-3 ${isActive ? 'text-[#a98a66]' : 'text-gray-400'}`} />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
+        </div>
+
+        <div className="p-6 border-t border-gray-800">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded bg-[#a98a66] flex items-center justify-center text-white font-bold">
+              GM
+            </div>
+            <div>
+              <p className="text-sm font-bold text-white">Admin User</p>
+              <p className="text-xs text-gray-500">Settings</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top Header */}
+        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 sm:px-6 z-10">
+          <div className="flex items-center">
+            <button 
+              className="md:hidden text-gray-500 hover:text-black mr-4"
+              onClick={() => setIsMobileMenuOpen(true)}
+            >
+              <Menu size={24} />
+            </button>
+            <h2 className="text-xl font-semibold text-black capitalize">
+              {tabs.find(t => t.id === activeTab)?.label}
+            </h2>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            <button className="text-gray-400 hover:text-[#a98a66] transition-colors relative">
+              <Bell size={20} />
+              <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 transform translate-x-1/2 -translate-y-1/2"></span>
+            </button>
+            <button className="text-gray-400 hover:text-[#a98a66] transition-colors">
+              <Settings size={20} />
+            </button>
+          </div>
+        </header>
+
+        {/* Scrollable Main Area */}
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+          <div className="max-w-7xl mx-auto">
+            {renderContent()}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
